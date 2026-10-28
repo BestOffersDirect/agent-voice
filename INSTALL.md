@@ -100,7 +100,7 @@ crash during weight loading on MPS (measured 2026-08 with torch 2.13).
 A voice is a directory under `voices/`:
 
 ```
-voices/skippy/
+voices/ship-ai/
   ref.wav        3-10 seconds of the voice, mono, 24 kHz, 16-bit PCM
   ref.txt        the EXACT words spoken in ref.wav, one line
   language.txt   optional, default "English"
@@ -113,7 +113,7 @@ voices/skippy/
 examples/make-voice-macos.sh voices/demo     # needs ffmpeg: brew install ffmpeg
 ```
 
-**A real voice, from any recording** (an audiobook, a podcast, a voice memo):
+**A real voice, from any recording** (a voice memo or any recording you have the right to use):
 
 1. Find 3–10 seconds where only that person is speaking, no music, no
    crosstalk. One clean sentence is ideal. A 30-second clip does *not* clone
@@ -122,16 +122,16 @@ examples/make-voice-macos.sh voices/demo     # needs ffmpeg: brew install ffmpeg
 2. Cut and convert it with ffmpeg (`-ss` start, `-t` length in seconds):
 
    ```sh
-   mkdir -p voices/skippy
-   ffmpeg -ss 8:43:09 -i book.m4b -t 7.5 -vn -ac 1 -ar 24000 -sample_fmt s16 voices/skippy/ref.wav
+   mkdir -p voices/ship-ai
+   ffmpeg -ss 8:43:09 -i recording.m4a -t 7.5 -vn -ac 1 -ar 24000 -sample_fmt s16 voices/ship-ai/ref.wav
    ```
 
-3. Write the exact transcript to `voices/skippy/ref.txt`. Punctuation and
+3. Write the exact transcript to `voices/ship-ai/ref.txt`. Punctuation and
    casing matter less than getting every word right; a wrong word here makes
    the clone drift. (If you have whisper handy, draft with it and fix by hand.)
 4. Cut three or four candidates and pick by ear — clips from the same speaker
-   clone noticeably differently. `agent-voice speak --voice skippy-b "..."`
-   for each, keep the winner as `voices/skippy`.
+   clone noticeably differently. `agent-voice speak --voice ship-ai-b "..."`
+   for each, keep the winner as `voices/ship-ai`.
 
 `agent-voice voices` lists what it found; `agent-voice doctor` warns about
 clips that are too long or not PCM WAV.
@@ -182,7 +182,7 @@ sentences, so the persona file only needs to describe character.
 [ok  ] python         3.12.4
 [ok  ] player         afplay
 [ok  ] tts            http://gpu-box:8181 (OmniVoice)
-[ok  ] voices         demo, skippy
+[ok  ] voices         demo, ship-ai
 [ok  ] writer         qwen3:8b @ http://127.0.0.1:11434
 [ok  ] ffmpeg         found (for making voices)
 ```
@@ -190,8 +190,8 @@ sentences, so the persona file only needs to describe character.
 Every `FAIL` line comes with a `fix:` line. When it is green:
 
 ```sh
-.venv/bin/agent-voice speak --voice skippy "Say something, dum-dum."
-printf 'All 41 tests pass after the refactor.\n' | .venv/bin/agent-voice pipe --voice skippy
+.venv/bin/agent-voice speak --voice ship-ai "Systems are online."
+printf 'All 41 tests pass after the refactor.\n' | .venv/bin/agent-voice pipe --voice ship-ai
 .venv/bin/agent-voice serve      # then POST /say from anything
 ```
 
@@ -199,9 +199,9 @@ printf 'All 41 tests pass after the refactor.\n' | .venv/bin/agent-voice pipe --
 
 ## Hooking up an agent
 
-- **It prints to stdout:** `my-agent | agent-voice pipe --voice skippy`.
+- **It prints to stdout:** `my-agent | agent-voice pipe --voice ship-ai`.
 - **It can make HTTP calls:** run `agent-voice serve` and POST
-  `{"text": reply, "voice": "skippy"}` to `http://127.0.0.1:7161/say`.
+  `{"text": reply, "voice": "ship-ai"}` to `http://127.0.0.1:7161/say`.
 - **It is Python:** `from agent_voice import Config, Speaker` — see the README.
 - **It is Claude Code:** `integrations/claude-code/README.md`.
 
