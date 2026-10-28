@@ -101,8 +101,9 @@ curl -s localhost:7161/say -H 'content-type: application/json' \
 ```
 
 `POST /say` takes `text`, optional `voice` and optional `mode`. It answers
-`204` when there was nothing to say, `404` for an unknown voice and `502` if
-the TTS or writer failed.
+`204` when there was nothing to say, `400` for invalid JSON, empty `text` or
+an unknown `mode`, `404` for an unknown voice and `502` if the TTS or writer
+failed.
 
 ```python
 from agent_voice import Config, Speaker
