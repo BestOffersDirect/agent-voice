@@ -9,3 +9,4 @@ dist/
 voices/
 .env
 .DS_Store
+agent-voice.env
